@@ -134,7 +134,8 @@ def bankOperation(user):
 def withdrawOperation(user):
     print("-------- Withdraw --------\n")
 
-    currentBalance = int(getCurrentBalance)
+    currentBalance = int(getCurrentBalance(user))
+    print("Your balance is %s\n" % "${:,.2f}".format(currentBalance))
     if (currentBalance == 0):
         print("insufficient funds\n(You should make a deposit first).\nReturning to menu\n")
         bankOperation(user)
@@ -154,7 +155,7 @@ def withdrawOperation(user):
             currentBalance -= withdrawAmount
             setCurrentBalance(user, str(currentBalance))
             if database.update(accountNumberFromUser, user):
-                print("Your balance is %s\nThank you.\n" % "${:,.2f}".format(user[4]))
+                print("Your balance is %s\nThank you.\n" % "${:,.2f}".format(currentBalance))
                 print("Take your cash...Returning to menu\n")
                 bankOperation(user)
         else:

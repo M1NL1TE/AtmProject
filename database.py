@@ -124,11 +124,13 @@ def update(accountNumber, userDetails):
     user = userDetails[0] + "," + userDetails[1] + "," + userDetails[2] + "," + userDetails[3] + "," + userDetails[4]
 
     try:
-        f = open(user_db_path + str(accountNumber) + ".txt", "r+")
+        f = open(user_db_path + str(accountNumber) + ".txt", "w")
         f.write(user)
+        f.close()
         return True
     except FileNotFoundError:
         print("User not found")
+    
     
 
    # return True
