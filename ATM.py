@@ -125,6 +125,7 @@ def bankOperation(user):
     elif(selectedOption == 4):
         complaint(user)
     elif(selectedOption == 5):
+        database.userLogOut(accountNumberFromUser)
         exit()
     else:
         print("Invalid option selected")
@@ -132,7 +133,9 @@ def bankOperation(user):
 
 def withdrawOperation(user):
     print("-------- Withdraw --------\n")
-    if (user[4] == 0):
+
+    currentBalance = int(getCurrentBalance)
+    if (currentBalance == 0):
         print("insufficient funds\n(You should make a deposit first).\nReturning to menu\n")
         bankOperation(user)
     else:
@@ -143,18 +146,23 @@ def withdrawOperation(user):
             
             withdrawAmount = int(withdrawAmount)
 
-            while withdrawAmount > user[4]:
-                print("Insuffient funds, you only have %s left in your account. Enter new amount\n" % "${:,.2f}".format(user[4])) # Formats currentBalance to currency
+            while withdrawAmount > currentBalance:
+                print("Insuffient funds, you only have %s left in your account. Enter new amount\n" % "${:,.2f}".format(currentBalance))
+                 # Formats currentBalance to currency
                 withdrawAmount = int(input())
-            user[4] -= withdrawAmount
-            print("Your balance is %s\nThank you.\n" % "${:,.2f}".format(user[4]))
-            print("Take your cash...Returning to menu\n")
-            bankOperation(user)
+
+            currentBalance -= withdrawAmount
+            setCurrentBalance(user, str(currentBalance))
+            if database.update(accountNumberFromUser, user):
+                print("Your balance is %s\nThank you.\n" % "${:,.2f}".format(user[4]))
+                print("Take your cash...Returning to menu\n")
+                bankOperation(user)
         else:
             withdrawOperation(user)
         
 
 def depositOperation(user):
+    print("-------- Deposit --------\n")
 
     currentBalance = int(getCurrentBalance(user))
     depositAmount = input("How much would you like to deposit?\n")

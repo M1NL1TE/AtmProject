@@ -50,14 +50,13 @@ def userLoginStatus(accountNumber):
     try:
         f = open("ATMProject/data/auth_sessions/" + str(accountNumber) + ".txt", "x" )
     except FileExistsError:
-        doesFileContainData = read("ATMProject/data/auth_sessions/" + str(accountNumber) + ".txt")
+        doesFileContainData = readLogin(accountNumber)
         if not doesFileContainData:
             userLogOut(accountNumber)
     else:
         f.write("User: " + accountNumber + " is logged in" )
         loginStatus = True
     finally:
-        f.close()
         return loginStatus
 
 def userLogOut(accountNumber):
@@ -87,6 +86,25 @@ def read(accountNumber):
             f = open(user_db_path + str(accountNumber) + ".txt", "r")
         else:
             f = open(user_db_path + accountNumber, "r")
+    except FileNotFoundError:
+        print("User not found")
+    except FileExistsError:
+        print("User doesn't exist")
+    except TypeError:
+        print("Invalid input, need number format")
+    else:
+        return f.readline()
+
+def readLogin(accountNumber):
+    
+    # find user with account number
+    # fetch content of the file
+    is_valid_account_number = validation.account_number_validation(accountNumber)
+    try:
+        if is_valid_account_number:
+            f = open("ATMProject/data/auth_sessions/" + str(accountNumber) + ".txt", "r")
+        else:
+            f = open("ATMProject/data/auth_sessions/" + accountNumber, "r")
     except FileNotFoundError:
         print("User not found")
     except FileExistsError:
